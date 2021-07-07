@@ -1,0 +1,42 @@
+version: '3.2'
+
+services:
+  db:
+    container_name: project_db
+    image: postgres
+    env_file:
+      - '.env'
+    environment:
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_USER: $DB_USER
+      POSTGRES_DB: $DB_NAME
+      APP_DB_USER: $DB_USER
+      APP_DB_PASS: $DB_PASSWORD
+      APP_DB_NAME: $DB_NAME
+    ports:
+    - 5432:5432
+    networks:
+      - chelentano
+    volumes:
+    #creating DB with the db_init.sh
+    - .db_init.sh:/docker-entrypoint-initdb.d/
+    - ./postgres_data:/var/lib/postgresql/data
+
+  tgbot:
+    container_name: bot
+    build:
+      context: .
+    command: python app.py
+    volumes:
+      - .:/src
+    networks:
+      - chelentano
+    env_file:
+      - '.env'
+    restart: always
+    depends_on:
+      - db
+
+networks:
+  chelentano:
+    driver: bridge
