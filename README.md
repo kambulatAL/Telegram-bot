@@ -1,1 +1,1 @@
-## A Telegram bot developed with Python + Aiogram + Asincio
+## A Telegram bot for an e-shop developed with Python + Aiogram + Asincio
